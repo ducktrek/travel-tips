@@ -1,0 +1,178 @@
+import React, { useState } from 'react';
+import { Search, Globe2, Wallet, Phone, Umbrella, Utensils, Clock, MapPin, AlertCircle, ShieldCheck } from 'lucide-react';
+
+const TravelTips = () => {
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const categories = [
+    { id: 'all', icon: Globe2, label: 'All Tips' },
+    { id: 'safety', icon: ShieldCheck, label: 'Safety' },
+    { id: 'essentials', icon: Wallet, label: 'Essential Info' },
+    { id: 'connectivity', icon: Phone, label: 'Connectivity' },
+    { id: 'weather', icon: Umbrella, label: 'Weather & Packing' },
+    { id: 'food', icon: Utensils, label: 'Food & Dining' },
+    { id: 'customs', icon: Clock, label: 'Local Customs' },
+    { id: 'transport', icon: MapPin, label: 'Getting Around' }
+  ];
+
+  const tips = [
+    {
+      category: 'safety',
+      title: 'Safety Guidelines',
+      content: [
+        'UAE is one of the safest countries globally',
+        'Keep copies of important documents',
+        'Use hotel safes for valuables',
+        'Stay aware in crowded tourist areas',
+        'Emergency: Police (999), Ambulance (998), Fire (997)',
+        'Download Dubai Police App for quick assistance'
+      ]
+    },
+    {
+      category: 'essentials',
+      title: 'Currency & Payments',
+      content: [
+        'Local currency: UAE Dirham (AED)',
+        'Major credit cards widely accepted',
+        'Carry some cash for taxis and small purchases',
+        'ATMs readily available at malls and metro stations',
+        'Current exchange rate: ~3.67 AED = 1 USD'
+      ]
+    },
+    {
+      category: 'connectivity',
+      title: 'Staying Connected',
+      content: [
+        'E-SIM options via Airalo (recommended):',
+        '- UAE 1GB/7 days: $4.50',
+        '- UAE 3GB/30 days: $11.00',
+        'Physical SIM at airport (du/Etisalat)',
+        'Free WiFi in most malls and hotels',
+        'Download offline maps before travel',
+        'VPN recommended for video calls'
+      ]
+    },
+    {
+      category: 'weather',
+      title: 'Weather Considerations',
+      content: [
+        'Pack light, breathable clothing',
+        'Sunscreen (SPF 50+) essential',
+        'Indoor venues are heavily air-conditioned',
+        'Carry a light jacket for malls/restaurants',
+        'Stay hydrated - aim for 3-4L water daily',
+        'UV index is typically very high'
+      ]
+    },
+    {
+      category: 'food',
+      title: 'Dining Tips',
+      content: [
+        'Tap water not recommended - stick to bottled',
+        'Tipping (10-15%) appreciated but not mandatory',
+        'Popular delivery apps: Talabat, Deliveroo, Careem',
+        'Lunch: 12:30-3:30, Dinner: 7:00-11:00',
+        'Many restaurants close during prayer times'
+      ]
+    },
+    {
+      category: 'customs',
+      title: 'Cultural Awareness',
+      content: [
+        'Dress modestly in public places',
+        'Cover shoulders and knees in malls',
+        'Public displays of affection discouraged',
+        'Ramadan: No eating/drinking in public during daylight',
+        'Always ask before photographing people',
+        'Respect prayer times and religious customs'
+      ]
+    },
+    {
+      category: 'transport',
+      title: 'Transportation',
+      content: [
+        'Metro: Buy NOL card for public transport',
+        'Uber/Careem popular for taxis',
+        'Metro: 5am-midnight (2am weekends)',
+        'Ladies-only carriages available',
+        'Bus services connect major attractions',
+        'Water taxis available along Creek'
+      ]
+    }
+  ];
+
+  const filteredTips = tips.filter(tip => 
+    (activeCategory === 'all' || tip.category === activeCategory) &&
+    (searchQuery === '' || 
+      tip.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tip.content.some(item => item.toLowerCase().includes(searchQuery.toLowerCase())))
+  );
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-8" style={{ color: '#63574A', fontFamily: 'Playfair Display' }}>
+        Travel Tips & Essential Information
+      </h1>
+      
+      {/* Search Bar */}
+      <div className="relative mb-8">
+        <Search className="absolute left-3 top-3" style={{ color: '#88BEB7' }} size={20} />
+        <input
+          type="text"
+          placeholder="Search tips..."
+          className="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none border"
+          style={{ borderColor: '#E5DBD0' }}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      {/* Category Filters */}
+      <div className="flex flex-wrap gap-4 mb-8">
+        {categories.map(({ id, icon: Icon, label }) => (
+          <button
+            key={id}
+            onClick={() => setActiveCategory(id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors`}
+            style={{
+              backgroundColor: activeCategory === id ? '#88BEB7' : '#E5DBD0',
+              color: activeCategory === id ? 'white' : '#63574A'
+            }}
+          >
+            <Icon size={16} />
+            <span>{label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Tips Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {filteredTips.map((tip, index) => (
+          <div key={index} className="rounded-lg overflow-hidden border" style={{ borderColor: '#E5DBD0' }}>
+            <div className="px-6 py-4" style={{ backgroundColor: '#E5DBD0' }}>
+              <h3 className="text-lg font-semibold" style={{ color: '#63574A', fontFamily: 'Raleway' }}>
+                {tip.title}
+              </h3>
+            </div>
+            <ul className="p-6 space-y-3" style={{ backgroundColor: 'white' }}>
+              {tip.content.map((item, itemIndex) => (
+                <li key={itemIndex} className="flex items-start gap-3">
+                  <AlertCircle size={16} style={{ color: '#88BEB7' }} className="mt-1 flex-shrink-0" />
+                  <span style={{ color: '#63574A' }}>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {filteredTips.length === 0 && (
+        <div className="text-center py-12">
+          <p style={{ color: '#63574A' }}>No tips found matching your search.</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default TravelTips;
